@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import '../widgets/app_background.dart'; // Your custom background widget
+import 'manager_dashboard2.dart' as role_login; // Use role-selection LoginScreen
 
+// --- Order Model ---
 class OrderItem {
   String customer;
   String product;
@@ -16,6 +19,7 @@ class OrderItem {
   });
 }
 
+// --- Manager Dashboard ---
 class ManagerDashboard extends StatefulWidget {
   const ManagerDashboard({super.key});
 
@@ -79,18 +83,42 @@ class _ManagerDashboardState extends State<ManagerDashboard>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Manager Dashboard'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            // Navigate back to the role-selection login screen
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const role_login.LoginScreen()),
+            );
+          },
+        ),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [Tab(text: 'New'), Tab(text: 'In Production'), Tab(text: 'Delivered')],
+          tabs: const [
+            Tab(text: 'New'),
+            Tab(text: 'In Production'),
+            Tab(text: 'Delivered'),
+          ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildList(_filtered('New')),
-          _buildList(_filtered('In Production')),
-          _buildList(_filtered('Delivered')),
-        ],
+      body: AppBackground(
+        width: MediaQuery.of(context).size.width * 0.95,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildList(_filtered('New')),
+                  _buildList(_filtered('In Production')),
+                  _buildList(_filtered('Delivered')),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -117,6 +145,7 @@ class _ManagerDashboardState extends State<ManagerDashboard>
   }
 }
 
+// --- Order Detail Page ---
 class OrderDetailPage extends StatelessWidget {
   final OrderItem order;
   final VoidCallback onUpdate;
@@ -126,8 +155,19 @@ class OrderDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Order Detail')),
-      body: Padding(
+      appBar: AppBar(
+        title: const Text('Order Detail'),
+        leading: IconButton(
+  icon: const Icon(Icons.arrow_back),
+  onPressed: () {
+    // Go back to the original LoginScreen in the navigation stack
+    Navigator.of(context).pop();
+  },
+),
+
+      ),
+      body: AppBackground(
+        width: MediaQuery.of(context).size.width * 0.85,
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,26 +182,30 @@ class OrderDetailPage extends StatelessWidget {
             const SizedBox(height: 16),
             Row(
               children: [
-                ElevatedButton(
-                  onPressed: order.status == 'In Production'
-                      ? null
-                      : () {
-                          order.status = 'In Production';
-                          onUpdate();
-                          Navigator.pop(context);
-                        },
-                  child: const Text('Mark In Production'),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: order.status == 'In Production'
+                        ? null
+                        : () {
+                            order.status = 'In Production';
+                            onUpdate();
+                            Navigator.pop(context);
+                          },
+                    child: const Text('Mark In Production'),
+                  ),
                 ),
                 const SizedBox(width: 12),
-                ElevatedButton(
-                  onPressed: order.status == 'Delivered'
-                      ? null
-                      : () {
-                          order.status = 'Delivered';
-                          onUpdate();
-                          Navigator.pop(context);
-                        },
-                  child: const Text('Mark Delivered'),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: order.status == 'Delivered'
+                        ? null
+                        : () {
+                            order.status = 'Delivered';
+                            onUpdate();
+                            Navigator.pop(context);
+                          },
+                    child: const Text('Mark Delivered'),
+                  ),
                 ),
               ],
             )
@@ -172,3 +216,25 @@ class OrderDetailPage extends StatelessWidget {
   }
 }
 
+// --- Simple Login Page ---
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Login Page')),
+      body: Center(
+        child: ElevatedButton(
+          child: const Text('Login as Manager'),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const ManagerDashboard()),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}

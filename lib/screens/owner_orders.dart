@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/app_background.dart';
 
 class OwnerOrders extends StatelessWidget {
   const OwnerOrders({super.key});
@@ -44,32 +45,36 @@ class OwnerOrders extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Orders (Read Only)')),
-      body: ListView.separated(
-        itemCount: orders.length,
-        separatorBuilder: (_, __) => const Divider(height: 1),
-        itemBuilder: (context, index) {
-          final o = orders[index];
-          return ListTile(
-            title: Text(o['customer']),
-            subtitle: Text('${o['product']} • Qty: ${o['qty']}'),
-            trailing: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: _statusColor(o['status']).withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(6),
+      body: AppBackground(
+        width: MediaQuery.of(context).size.width * 0.95,
+        child: ListView.separated(
+          shrinkWrap: true,
+          itemCount: orders.length,
+          separatorBuilder: (_, __) => const Divider(height: 1),
+          itemBuilder: (context, index) {
+            final o = orders[index];
+            return ListTile(
+              title: Text(o['customer']),
+              subtitle: Text('${o['product']} • Qty: ${o['qty']}'),
+              trailing: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: _statusColor(o['status']).withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(o['status'], style: TextStyle(color: _statusColor(o['status']))),
                   ),
-                  child: Text(o['status'], style: TextStyle(color: _statusColor(o['status']))),
-                ),
-                const SizedBox(height: 4),
-                Text(o['date']),
-              ],
-            ),
-          );
-        },
+                  const SizedBox(height: 4),
+                  Text(o['date']),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

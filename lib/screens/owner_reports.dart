@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/app_background.dart';
 
 class OwnerReports extends StatefulWidget {
   const OwnerReports({super.key});
@@ -59,7 +60,8 @@ class _OwnerReportsState extends State<OwnerReports> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Reports')),
-      body: Padding(
+      body: AppBackground(
+        width: MediaQuery.of(context).size.width * 0.95,
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
@@ -78,7 +80,7 @@ class _OwnerReportsState extends State<OwnerReports> {
               ],
             ),
             const SizedBox(height: 12),
-            Expanded(
+            Flexible(
               child: ListView.builder(
                 itemCount: _filtered.length,
                 itemBuilder: (context, i) {

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import '../widgets/app_background.dart';
 import 'owner_orders.dart';
 import 'owner_reports.dart';
+import '../widgets/dashboard_card.dart';
+import 'login_screen.dart'; // Import your login screen
 
 class OwnerDashboard extends StatelessWidget {
   const OwnerDashboard({super.key});
@@ -11,26 +14,36 @@ class OwnerDashboard extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Owner Dashboard'),
         backgroundColor: Colors.purple[800],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            // Navigate back to login page
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            );
+          },
+        ),
       ),
-      backgroundColor: Colors.purple[50],
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: AppBackground(
+        width: MediaQuery.of(context).size.width * 0.95,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             // Top Cards Row
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                DashboardCard(title: 'Total Orders', value: '120'),
-                DashboardCard(title: 'Delivered Orders', value: '90'),
+              children: [
+                Expanded(child: DashboardCard(title: 'Total Orders', value: '120')),
+                const SizedBox(width: 12),
+                Expanded(child: DashboardCard(title: 'Delivered Orders', value: '90')),
               ],
             ),
             const SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                DashboardCard(title: 'Pending Payments', value: '30'),
-                DashboardCard(title: 'Today Orders', value: '15'),
+              children: [
+                Expanded(child: DashboardCard(title: 'Pending Payments', value: '30')),
+                const SizedBox(width: 12),
+                Expanded(child: DashboardCard(title: 'Today Orders', value: '15')),
               ],
             ),
 
@@ -68,57 +81,6 @@ class OwnerDashboard extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class DashboardCard extends StatelessWidget {
-  final String title;
-  final String value;
-
-  const DashboardCard({
-    super.key,
-    required this.title,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: (MediaQuery.of(context).size.width / 2) - 24, // two cards per row
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.purple[100],
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.purple.withOpacity(0.2),
-            blurRadius: 5,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.purple,
-            ),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.purple,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
       ),
     );
   }

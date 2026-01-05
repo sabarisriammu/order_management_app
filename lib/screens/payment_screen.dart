@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/app_background.dart';
 
 class PaymentScreen extends StatefulWidget {
   final String? orderId;
@@ -68,7 +69,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
       appBar: AppBar(
         title: const Text('Payment Entry'),
       ),
-      body: Padding(
+      body: AppBackground(
+        width: MediaQuery.of(context).size.width * 0.95,
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Form(
